@@ -1,0 +1,5 @@
+Artificial Intelligence (AI) is transforming industries by enabling intelligent automation, decision support, and advanced analytics.
+
+Generative AI and Large Language Models (LLMs) have accelerated innovation across enterprise applications.
+
+Retrieval-Augmented Generation (RAG) combines information retrieval with language generation to improve accuracy and reduce hallucinations.
