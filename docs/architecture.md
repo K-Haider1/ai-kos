@@ -4,6 +4,20 @@
 
 User
 ↓
+Planner Agent
+↓
+Retriever Agent
+↓
+Validator Agent
+↓
+Report Generator
+↓
+Critic Agent
+↓
+Final Response
+
+
+
 Document
 ↓
 Loader
@@ -25,8 +39,21 @@ Validator Agent
 Report Generator
 ↓
 Critic Agent
+
+
+Document
 ↓
-Final Response
+Loader
+↓
+Text Cleaner
+↓
+Chunker
+↓
+Embedding Service
+↓
+Vector Store
+↓
+Retriever Agent
 
 ## Components
 

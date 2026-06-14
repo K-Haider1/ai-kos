@@ -10,6 +10,7 @@ Kahkashan Haider
 """
 from pathlib import Path
 from ingestion.text_cleaner import clean_text
+from ingestion.chunker import chunk_text
 
 def load_text_file(file_path:str) -> str:
     """
@@ -27,4 +28,8 @@ def load_text_file(file_path:str) -> str:
 if __name__ == "__main__":
     text = load_text_file("data/raw/sample_document.txt")
     cleaned_text = clean_text(text)
-    print(cleaned_text)
+    chunks = chunk_text(cleaned_text)
+    print(f"Chunks Generated : {len(chunks)}")
+    for chunk in chunks:
+        print("\n-------------------")
+        print(chunk)
