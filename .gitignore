@@ -1,1 +1,38 @@
+# Python
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+
+.venv/
+venv/
+
+# Environment Variables
+
+.env
+
+# VS Code
+
+.vscode/
+
+# Logs
+
+logs/
+*.log
+
+# Database
+
+*.db
+
+# ChromaDB
+
+chroma_db/
+
+# Operating System
+
+.DS_Store
+Thumbs.db
 
