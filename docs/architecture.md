@@ -4,9 +4,21 @@
 
 User
 ↓
-Planner Agent
+Document
+↓
+Loader
+↓
+Text Cleaner
+↓
+Chunker
+↓
+Embedding Pipeline
+↓
+Vector Store
 ↓
 Retriever Agent
+↓
+Planner Agent
 ↓
 Validator Agent
 ↓

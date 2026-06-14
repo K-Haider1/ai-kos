@@ -9,6 +9,7 @@ Author :
 Kahkashan Haider
 """
 from pathlib import Path
+from ingestion.text_cleaner import clean_text
 
 def load_text_file(file_path:str) -> str:
     """
@@ -25,4 +26,5 @@ def load_text_file(file_path:str) -> str:
 
 if __name__ == "__main__":
     text = load_text_file("data/raw/sample_document.txt")
-    print(text)
+    cleaned_text = clean_text(text)
+    print(cleaned_text)
