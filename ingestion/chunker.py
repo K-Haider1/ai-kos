@@ -1,10 +1,12 @@
 """
 Module: Chunker
 Purpose: 
-Split cleaned text into chunks for embedding
+Split cleaned text into meaningful chunks.
 Author:
 Kahkashan Haider
 """
+
+from typing import List
 
 def chunk_text(
         text: str,
@@ -12,19 +14,21 @@ def chunk_text(
         chunk_overlap: int = 20 
 ) -> list[str]:
     """
-    Split text into overlapping chunks.
+    Split text into chunks while preserving words.
     Args:
-        text: The cleaned text to be chunked.
-        chunk_size: The maximum size of each chunk.
-        chunk_overlap: The number of overlapping characters between chunks.
+        text: Cleaned text.
+        chunk_size: The maximum chunk size.
+        chunk_overlap: The number of words to overlapping.
     Returns:
-        A list of text chunks.
+        A list of chunks.
     """
+    words = text.split()
     chunks = []
     start = 0
-    while start <len(text):
+    while start <len(words):
         end = start + chunk_size
-        chunks.append(text[start:end])
+        chunk = " ".join(words[start:end])
+        chunks.append(chunk)
         start += chunk_size - chunk_overlap
     return chunks
 
