@@ -55,6 +55,30 @@ Vector Store
 ↓
 Retriever Agent
 
+
+Document
+↓
+Loader
+↓
+Cleaner
+↓
+Chunker
+↓
+Embedding Service
+↓
+ChromaDB Vector Store
+↓
+Retriever Agent
+↓
+Planner Agent
+↓
+Validator Agent
+↓
+Report Generator
+↓
+Critic Agent
+
+
 ## Components
 
 ### Planner Agent

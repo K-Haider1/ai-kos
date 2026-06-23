@@ -36,3 +36,8 @@ chroma_db/
 .DS_Store
 Thumbs.db
 
+
+# ChromaDB
+data/vector_store/
+*.sqlite3
+*.db
