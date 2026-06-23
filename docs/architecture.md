@@ -1,8 +1,34 @@
 # AI-KOS Architecture
 
-## High-Level Flow
+## Document Ingestion Flow
 
-User
+Document
+↓
+Loader
+↓
+Text Cleaner
+↓
+Chunker
+↓
+Embedding Service
+↓
+ChromaDB Vector Store
+
+## Retrieval Flow
+
+User Query
+↓
+Retriever Agent
+↓
+Embedding Service
+↓
+ChromaDB Vector Store
+↓
+Relevant Context
+
+## Multi-Agent Flow (Future)
+
+User Query
 ↓
 Planner Agent
 ↓
@@ -16,109 +42,33 @@ Critic Agent
 ↓
 Final Response
 
-
-
-Document
-↓
-Loader
-↓
-Text Cleaner
-↓
-Chunker
-↓
-Embedding Pipeline
-↓
-Vector Store
-↓
-Retriever Agent
-↓
-Planner Agent
-↓
-Validator Agent
-↓
-Report Generator
-↓
-Critic Agent
-
-
-Document
-↓
-Loader
-↓
-Text Cleaner
-↓
-Chunker
-↓
-Embedding Service
-↓
-Vector Store
-↓
-Retriever Agent
-
-
-Document
-↓
-Loader
-↓
-Cleaner
-↓
-Chunker
-↓
-Embedding Service
-↓
-ChromaDB Vector Store
-↓
-Retriever Agent
-↓
-Planner Agent
-↓
-Validator Agent
-↓
-Report Generator
-↓
-Critic Agent
-
-
 ## Components
-
-### Planner Agent
-
-Responsible for:
-
-* Query Understanding
-* Task Planning
-* Workflow Routing
 
 ### Retriever Agent
 
-Responsible for:
-
 * Semantic Search
-* Knowledge Retrieval
-* Context Selection
+* Context Retrieval
+* Knowledge Lookup
+
+### Planner Agent
+
+* Task Planning
+* Workflow Routing
 
 ### Validator Agent
 
-Responsible for:
-
-* Source Validation
+* Fact Validation
 * Confidence Scoring
-* Consistency Checks
 
 ### Report Generator
 
-Responsible for:
-
-* Summary Creation
-* Action Plan Generation
+* Summary Generation
+* Action Plans
 
 ### Critic Agent
 
-Responsible for:
-
 * Hallucination Detection
-* Output Review
-* Quality Assurance
+* Quality Review
 
 ## Data Layer
 
@@ -131,5 +81,15 @@ Responsible for:
 
 ## LLM Layer
 
-* Gemini API
+* Gemini API (Phase 9)
 * Ollama (Future)
+* OpenAI Compatible Models (Future)
+
+
+## Future Frontend
+
+* Angular Dashboard
+* Chat Interface
+* Analytics
+* Document Management
+* Multi-Agent Visualization

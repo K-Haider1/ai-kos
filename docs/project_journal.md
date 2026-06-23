@@ -22,3 +22,17 @@ Phase 5
 - ChromaDB Integration
 - Persistent Vector Storage
 - Collection Management
+
+Phase 6
+- End-to-End Ingestion Pipeline
+- Loader Integration
+- Cleaner Integration
+- Chunking Integration
+- Embedding Integration
+- ChromaDB Integration
+
+Phase 7
+- Semantic Retrieval Engine
+- Query Embedding
+- Similarity Search
+- Context Retrieval

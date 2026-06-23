@@ -24,7 +24,19 @@ class VectorStore:
     def count(self):
         return self.collection.count()
     
+    def query(
+            self,
+            query_embedding,
+            top_k=3
+    ):
+        results = self.collection.query(
+            query_embeddings=[
+                query_embedding.tolist()
+            ],
+            n_results=top_k
+        )
+        return results
+    
 if __name__ == "__main__":
     store = VectorStore()
     print(f"Document Count : {store.count()}")
-    
