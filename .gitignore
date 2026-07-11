@@ -5,24 +5,6 @@
 *.pyo
 *.pyd
 
-# Virtual Environment
-
-.venv/
-venv/
-
-# Environment Variables
-
-.env
-
-# VS Code
-
-.vscode/
-
-# Logs
-
-logs/
-*.log
-
 # Database
 
 *.db
@@ -41,3 +23,23 @@ Thumbs.db
 data/vector_store/
 *.sqlite3
 *.db
+
+
+# virtual env
+.venv/
+venv/
+
+.env
+
+# python cache
+__pycache__/
+*.pyc
+
+# vector db
+data/vector_store/
+
+# vscode
+.vscode/
+
+# logs
+*.log
