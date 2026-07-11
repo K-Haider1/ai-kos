@@ -42,6 +42,21 @@ Critic Agent
 ↓
 Final Response
 
+## Context Generation Flow
+
+User Question
+↓
+Retriever Agent
+↓
+Top-K Retrieved Chunks
+↓
+Context Builder
+↓
+Prompt Builder
+↓
+LLM Ready Prompt
+
+
 ## Components
 
 ### Retriever Agent
