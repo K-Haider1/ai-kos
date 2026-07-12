@@ -56,6 +56,41 @@ Prompt Builder
 ↓
 LLM Ready Prompt
 
+## RAG Generation Pipeline
+
+User Query
+↓
+RAG Service
+↓
+Retriever Agent
+↓
+Embedding Service
+↓
+ChromaDB Vector Store
+↓
+Retrieved Documents
+↓
+Context Builder
+↓
+Prompt Builder
+↓
+LLM Provider Factory
+↓
+Configured LLM Provider
+↓
+Grounded Final Answer
+
+### RAG Service Responsibilities
+
+- Validate user queries
+- Validate retrieval parameters
+- Retrieve relevant knowledge
+- Filter empty or invalid documents
+- Prevent LLM calls when no usable context exists
+- Build grounded context
+- Generate prompts
+- Route requests through the configured LLM provider
+- Return the final generated answer
 
 ## Components
 
@@ -96,7 +131,7 @@ LLM Ready Prompt
 
 ## LLM Layer
 
-* Gemini API (Phase 9)
+* Gemini API (Current Default Provider)
 * Ollama (Future)
 * OpenAI Compatible Models (Future)
 
