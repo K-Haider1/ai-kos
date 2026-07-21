@@ -1,145 +1,298 @@
 # AI-KOS Architecture
 
-## Document Ingestion Flow
+---
 
+# High-Level System Architecture
+
+```
+                        +----------------------+
+                        |      User Query      |
+                        +----------+-----------+
+                                   |
+                                   v
+                     +----------------------------+
+                     |    Orchestrator Service     |
+                     +--------------+-------------+
+                                    |
+                                    v
+                          +-------------------+
+                          |  Planner Agent    |
+                          +---------+---------+
+                                    |
+                 +------------------+------------------+
+                 |                                     |
+                 |                                     |
+         Knowledge Query                      General Query
+                 |                                     |
+                 v                                     v
+          +--------------+                 +------------------+
+          | RAG Service  |                 |  LLM Provider    |
+          +------+-------+                 +------------------+
+                 |
+                 v
+        +------------------+
+        | Retriever Agent  |
+        +--------+---------+
+                 |
+                 v
+      +------------------------+
+      | ChromaDB Vector Store  |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Retrieved Documents    |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Validator Agent        |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Context Builder        |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Prompt Builder         |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Gemini Provider        |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Report Generator       |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Critic Agent           |
+      +-----------+------------+
+                  |
+                  v
+      +------------------------+
+      | Final Approved Answer  |
+      +------------------------+
+```
+
+---
+
+# Document Ingestion Flow
+
+```
 Document
-↓
-Loader
-↓
+    │
+    ▼
+PDF Loader
+    │
+    ▼
 Text Cleaner
-↓
+    │
+    ▼
 Chunker
-↓
+    │
+    ▼
 Embedding Service
-↓
+    │
+    ▼
 ChromaDB Vector Store
+```
 
-## Retrieval Flow
+---
 
+# Retrieval Flow
+
+```
 User Query
-↓
+      │
+      ▼
 Retriever Agent
-↓
+      │
+      ▼
 Embedding Service
-↓
-ChromaDB Vector Store
-↓
-Relevant Context
+      │
+      ▼
+Vector Search
+      │
+      ▼
+Top-K Documents
+```
 
-## Multi-Agent Flow (Future)
+---
 
+# End-to-End RAG Flow
+
+```
 User Query
-↓
+      │
+      ▼
 Planner Agent
-↓
-Retriever Agent
-↓
-Validator Agent
-↓
-Report Generator
-↓
-Critic Agent
-↓
-Final Response
-
-## Context Generation Flow
-
-User Question
-↓
-Retriever Agent
-↓
-Top-K Retrieved Chunks
-↓
-Context Builder
-↓
-Prompt Builder
-↓
-LLM Ready Prompt
-
-## RAG Generation Pipeline
-
-User Query
-↓
+      │
+      ▼
+Knowledge Query?
+      │
+      ▼
 RAG Service
-↓
+      │
+      ▼
 Retriever Agent
-↓
-Embedding Service
-↓
-ChromaDB Vector Store
-↓
-Retrieved Documents
-↓
+      │
+      ▼
+Validator Agent
+      │
+      ▼
 Context Builder
-↓
+      │
+      ▼
 Prompt Builder
-↓
+      │
+      ▼
 LLM Provider Factory
-↓
-Configured LLM Provider
-↓
-Grounded Final Answer
+      │
+      ▼
+Gemini Provider
+      │
+      ▼
+Report Generator
+      │
+      ▼
+Critic Agent
+      │
+      ▼
+Final Approved Answer
+```
 
-### RAG Service Responsibilities
+---
 
-- Validate user queries
-- Validate retrieval parameters
-- Retrieve relevant knowledge
-- Filter empty or invalid documents
-- Prevent LLM calls when no usable context exists
-- Build grounded context
-- Generate prompts
-- Route requests through the configured LLM provider
-- Return the final generated answer
+# RAG Service Responsibilities
 
-## Components
+- Validate user query
+- Validate top-k
+- Retrieve semantic documents
+- Remove invalid documents
+- Build retrieval context
+- Generate prompt
+- Route request to configured LLM
+- Return grounded answer
 
-### Retriever Agent
+---
 
-* Semantic Search
-* Context Retrieval
-* Knowledge Lookup
+# Planner Agent
 
-### Planner Agent
+Responsibilities
 
-* Task Planning
-* Workflow Routing
+- Understand user request
+- Identify query type
+- Route workflow
+- Create execution plan
 
-### Validator Agent
+---
 
-* Fact Validation
-* Confidence Scoring
+# Retriever Agent
 
-### Report Generator
+Responsibilities
 
-* Summary Generation
-* Action Plans
+- Semantic Search
+- Similarity Matching
+- Context Retrieval
 
-### Critic Agent
+---
 
-* Hallucination Detection
-* Quality Review
+# Validator Agent
 
-## Data Layer
+Responsibilities
 
-* ChromaDB
-* Local Storage
+- Remove invalid documents
+- Normalize retrieved content
+- Ensure usable context
 
-## Embedding Layer
+---
 
-* BAAI/bge-small-en-v1.5
+# Context Builder
 
-## LLM Layer
+Responsibilities
 
-* Gemini API (Current Default Provider)
-* Ollama (Future)
-* OpenAI Compatible Models (Future)
+- Combine retrieved chunks
+- Produce clean context
 
+---
 
-## Future Frontend
+# Prompt Builder
 
-* Angular Dashboard
-* Chat Interface
-* Analytics
-* Document Management
-* Multi-Agent Visualization
+Responsibilities
+
+- Construct grounded prompts
+- Prevent hallucination
+- Standardize prompting
+
+---
+
+# LLM Provider Layer
+
+Current
+
+- Gemini API
+
+Future
+
+- OpenAI
+- Ollama
+- Claude
+- Azure OpenAI
+- AWS Bedrock
+
+---
+
+# Report Generator
+
+Responsibilities
+
+- Format generated answer
+- Create structured output
+
+---
+
+# Critic Agent
+
+Responsibilities
+
+- Review generated answer
+- Detect obvious hallucinations
+- Approve final response
+
+---
+
+# Data Layer
+
+- ChromaDB
+- Persistent Storage
+
+---
+
+# Embedding Layer
+
+- BAAI/bge-small-en-v1.5
+
+---
+
+# Future AI-KOS Roadmap
+
+- LangGraph
+- Multi-Agent Graph Execution
+- Human-in-the-loop
+- Memory
+- Checkpointing
+- Tool Calling
+- Web Search
+- SQL Agent
+- Vision Models
+- Evaluation Pipeline
+- Monitoring
+- Observability
+- Angular Dashboard
+- Analytics
