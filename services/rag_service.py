@@ -4,9 +4,11 @@ Author: Kahkashan Haider
 """
 
 from agents.retriever.retriever_agent import RetrieverAgent
+from agents.validator.validator_agent import ValidatorAgent
 from services.context_builder import ContextBuilder
 from prompts.prompt_builder import PromptBuilder
 from llm.factory import LLMProviderFactory
+
 
 class RAGService:
     """
@@ -15,6 +17,7 @@ class RAGService:
 
     def __init__(self):
         self.retriever = RetrieverAgent()
+        self.validator = ValidatorAgent()
         self.context_builder = ContextBuilder()
         self.prompt_builder = PromptBuilder()
         self.llm_provider = LLMProviderFactory.create()
@@ -41,11 +44,9 @@ class RAGService:
         if not documents or not documents[0]:
             return "I could not find relevant information in the knowledge base."
 
-        valid_documents = [
-            document.strip()
-            for document in documents[0]
-            if document and document.strip()
-        ]
+        valid_documents = self.validator.validate_documents(
+            documents[0]
+        )
 
         if not valid_documents:
             return "I could not find relevant information in the knowledge base."
