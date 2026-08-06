@@ -182,8 +182,47 @@ Final Approved Answer
 
 ---
 
-# Planner Agent
+## Conversation Memory Layer
 
+The Conversation Memory Layer enables AI-KOS to remember recent
+interactions during a session.
+
+### Components
+
+#### ConversationMemory
+
+Responsible for:
+
+- Storing user interactions
+- Returning recent conversations
+- Clearing session memory
+- Validating stored data
+
+#### MemoryService
+
+Provides a service layer over ConversationMemory.
+
+Responsibilities:
+
+- Save conversations
+- Retrieve recent history
+- Clear memory
+- Hide memory implementation details from other modules
+
+Current Storage:
+
+- In-memory (Python list)
+
+Future Storage:
+
+- SQLite
+- ChromaDB
+- Redis
+
+# Planner Agent
+* Query Classification
+* Task Planning
+* Workflow Routing
 Responsibilities
 
 - Understand user request
@@ -266,6 +305,18 @@ Responsibilities
 - Approve final response
 
 ---
+### Conversation Memory
+
+* Session Memory
+* Conversation History
+* Recent Interaction Retrieval
+
+### Memory Service
+
+* Memory Management
+* Save Conversations
+* Retrieve Conversations
+* Clear Memory
 
 # Data Layer
 
@@ -281,18 +332,36 @@ Responsibilities
 ---
 
 # Future AI-KOS Roadmap
+## Multi-Agent Orchestration Flow
 
-- LangGraph
-- Multi-Agent Graph Execution
-- Human-in-the-loop
-- Memory
-- Checkpointing
-- Tool Calling
-- Web Search
-- SQL Agent
-- Vision Models
-- Evaluation Pipeline
-- Monitoring
-- Observability
-- Angular Dashboard
-- Analytics
+User Query
+↓
+Planner Agent
+↓
+Memory Service
+↓
+Conversation Memory
+↓
+Workflow Routing
+↓
+Retriever Agent / LLM
+↓
+Report Generator
+↓
+Critic Agent
+↓
+Memory Update
+↓
+Final Response
+
+### Orchestrator Responsibilities
+
+- Receive user queries
+- Create an execution plan using the Planner Agent
+- Retrieve recent conversation history
+- Route knowledge queries through the RAG pipeline
+- Route general queries directly to the configured LLM
+- Generate a structured report
+- Review the report using the Critic Agent
+- Save the approved interaction into conversation memory
+- Return the final reviewed response
