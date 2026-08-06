@@ -3,6 +3,7 @@ AI-KOS Orchestrator Service
 Author: Kahkashan Haider
 """
 
+from services.memory_service import MemoryService
 from agents.critic.critic_agent import CriticAgent
 from agents.planner.planner_agent import PlannerAgent
 from agents.report_generator.report_generator_agent import (
@@ -27,11 +28,16 @@ class OrchestratorService:
         planner=None,
         rag_service=None,
         llm_provider=None,
-        report_generator=None,
         critic=None,
+        report_generator=None,
+        memory_service=None,
     ):
         self.planner = planner or PlannerAgent()
-        self.rag_service = rag_service or RAGService()
+
+        self.rag_service = (
+            rag_service
+            or RAGService()
+        )
 
         self.llm_provider = (
             llm_provider
@@ -48,18 +54,35 @@ class OrchestratorService:
             or CriticAgent()
         )
 
-    def execute(self, query: str) -> dict:
+        self.memory_service = (
+            memory_service
+            or MemoryService()
+        )
+
+    def execute(
+        self,
+        query: str,
+    ) -> dict:
+
         plan = self.planner.create_plan(query)
 
         query_type = plan["query_type"]
         cleaned_query = plan["query"]
 
+        # Load recent conversation history
+        # (used in upcoming phases)
+        conversation_history = (
+            self.memory_service.recent()
+        )
+
         if query_type == "knowledge_query":
+
             answer = self.rag_service.generate_answer(
                 cleaned_query
             )
 
         elif query_type == "general_query":
+
             answer = self.llm_provider.generate(
                 cleaned_query
             )
@@ -74,4 +97,13 @@ class OrchestratorService:
             answer=answer,
         )
 
-        return self.critic.review(report)
+        reviewed_report = self.critic.review(
+            report
+        )
+
+        self.memory_service.save(
+            query=reviewed_report["query"],
+            answer=reviewed_report["answer"],
+        )
+
+        return reviewed_report
