@@ -2,366 +2,359 @@
 
 ---
 
-# High-Level System Architecture
+# Overview
+
+AI-KOS is a modular Retrieval-Augmented Generation (RAG) platform designed with a multi-agent architecture.
+
+The system combines document retrieval, large language models, conversation memory, planning, validation, and response review into a production-ready AI pipeline.
+
+---
+
+# High-Level Architecture
 
 ```
-                        +----------------------+
-                        |      User Query      |
-                        +----------+-----------+
-                                   |
-                                   v
-                     +----------------------------+
-                     |    Orchestrator Service     |
-                     +--------------+-------------+
-                                    |
-                                    v
-                          +-------------------+
-                          |  Planner Agent    |
-                          +---------+---------+
-                                    |
-                 +------------------+------------------+
-                 |                                     |
-                 |                                     |
-         Knowledge Query                      General Query
-                 |                                     |
-                 v                                     v
-          +--------------+                 +------------------+
-          | RAG Service  |                 |  LLM Provider    |
-          +------+-------+                 +------------------+
-                 |
-                 v
-        +------------------+
-        | Retriever Agent  |
-        +--------+---------+
-                 |
-                 v
-      +------------------------+
-      | ChromaDB Vector Store  |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Retrieved Documents    |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Validator Agent        |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Context Builder        |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Prompt Builder         |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Gemini Provider        |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Report Generator       |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Critic Agent           |
-      +-----------+------------+
-                  |
-                  v
-      +------------------------+
-      | Final Approved Answer  |
-      +------------------------+
+                        User
+                         │
+                         ▼
+              Orchestrator Service
+                         │
+                         ▼
+                  Planner Agent
+                         │
+          ┌──────────────┴──────────────┐
+          │                             │
+          ▼                             ▼
+  Knowledge Query               General Query
+          │                             │
+          ▼                             ▼
+      RAG Service                 LLM Provider
+          │                             │
+          ▼                             │
+  Retriever Agent                       │
+          │                             │
+          ▼                             │
+  Validator Agent                       │
+          │                             │
+          ▼                             │
+  Context Builder                       │
+          │                             │
+          ▼                             │
+ History Formatter                      │
+          │                             │
+          ▼                             │
+   Prompt Builder                       │
+          │                             │
+          └──────────────┬──────────────┘
+                         ▼
+                   LLM Provider
+                         │
+                         ▼
+                Report Generator
+                         │
+                         ▼
+                   Critic Agent
+                         │
+                         ▼
+                 Memory Service
+                         │
+                         ▼
+             Conversation Memory
+                         │
+                         ▼
+                 Final Response
 ```
 
 ---
 
-# Document Ingestion Flow
+# Document Ingestion Pipeline
 
 ```
 Document
-    │
-    ▼
+   │
+   ▼
 PDF Loader
-    │
-    ▼
+   │
+   ▼
 Text Cleaner
-    │
-    ▼
-Chunker
-    │
-    ▼
+   │
+   ▼
+Text Chunker
+   │
+   ▼
 Embedding Service
-    │
-    ▼
+   │
+   ▼
 ChromaDB Vector Store
 ```
 
 ---
 
-# Retrieval Flow
+# Retrieval Pipeline
 
 ```
 User Query
-      │
-      ▼
+     │
+     ▼
 Retriever Agent
-      │
-      ▼
+     │
+     ▼
 Embedding Service
-      │
-      ▼
+     │
+     ▼
 Vector Search
-      │
-      ▼
+     │
+     ▼
 Top-K Documents
 ```
 
 ---
 
-# End-to-End RAG Flow
+# RAG Pipeline
 
 ```
 User Query
-      │
-      ▼
-Planner Agent
-      │
-      ▼
-Knowledge Query?
-      │
-      ▼
-RAG Service
-      │
-      ▼
+     │
+     ▼
 Retriever Agent
-      │
-      ▼
+     │
+     ▼
 Validator Agent
+     │
+     ▼
+Context Builder
+     │
+     ▼
+History Formatter
+     │
+     ▼
+Prompt Builder
+     │
+     ▼
+LLM Provider
+     │
+     ▼
+Generated Answer
+```
+
+---
+
+# Conversation Memory Pipeline
+
+```
+User Question
       │
       ▼
-Context Builder
+Memory Service
+      │
+      ▼
+Conversation Memory
+      │
+      ▼
+History Formatter
       │
       ▼
 Prompt Builder
       │
       ▼
-LLM Provider Factory
+LLM Response
       │
       ▼
-Gemini Provider
-      │
-      ▼
-Report Generator
-      │
-      ▼
-Critic Agent
-      │
-      ▼
-Final Approved Answer
+Save Interaction
 ```
 
 ---
 
-# RAG Service Responsibilities
+# Components
 
-- Validate user query
-- Validate top-k
-- Retrieve semantic documents
-- Remove invalid documents
-- Build retrieval context
-- Generate prompt
-- Route request to configured LLM
-- Return grounded answer
-
----
-
-## Conversation Memory Layer
-
-The Conversation Memory Layer enables AI-KOS to remember recent
-interactions during a session.
-
-### Components
-
-#### ConversationMemory
-
-Responsible for:
-
-- Storing user interactions
-- Returning recent conversations
-- Clearing session memory
-- Validating stored data
-
-#### MemoryService
-
-Provides a service layer over ConversationMemory.
-
-Responsibilities:
-
-- Save conversations
-- Retrieve recent history
-- Clear memory
-- Hide memory implementation details from other modules
-
-Current Storage:
-
-- In-memory (Python list)
-
-Future Storage:
-
-- SQLite
-- ChromaDB
-- Redis
-
-# Planner Agent
-* Query Classification
-* Task Planning
-* Workflow Routing
-Responsibilities
-
-- Understand user request
-- Identify query type
-- Route workflow
-- Create execution plan
-
----
-
-# Retriever Agent
+## Planner Agent
 
 Responsibilities
 
-- Semantic Search
-- Similarity Matching
-- Context Retrieval
+- Classify user queries
+- Determine execution strategy
+- Create execution plans
 
 ---
 
-# Validator Agent
+## Retriever Agent
+
+Responsibilities
+
+- Semantic search
+- Similarity retrieval
+- Top-K document retrieval
+
+---
+
+## Validator Agent
 
 Responsibilities
 
 - Remove invalid documents
 - Normalize retrieved content
-- Ensure usable context
+- Ensure high-quality context
 
 ---
 
-# Context Builder
+## Context Builder
 
 Responsibilities
 
-- Combine retrieved chunks
-- Produce clean context
+- Merge retrieved chunks
+- Produce retrieval context
 
 ---
 
-# Prompt Builder
+## History Formatter
 
 Responsibilities
 
-- Construct grounded prompts
-- Prevent hallucination
-- Standardize prompting
+- Format previous conversations
+- Ignore invalid interactions
+- Produce prompt-ready history
 
 ---
 
-# LLM Provider Layer
+## Prompt Builder
 
-Current
+Responsibilities
 
-- Gemini API
+- Combine conversation history
+- Combine retrieved knowledge
+- Add current user question
+- Generate standardized prompts
 
-Future
+---
+
+## LLM Provider Layer
+
+Current Provider
+
+- Google Gemini
+
+Future Providers
 
 - OpenAI
-- Ollama
 - Claude
+- Ollama
 - Azure OpenAI
 - AWS Bedrock
 
 ---
 
-# Report Generator
+## Report Generator
 
 Responsibilities
 
-- Format generated answer
-- Create structured output
+- Generate structured response objects
+
+Response format
+
+```python
+{
+    "query": "...",
+    "answer": "...",
+    "status": "approved"
+}
+```
 
 ---
 
-# Critic Agent
+## Critic Agent
 
 Responsibilities
 
-- Review generated answer
-- Detect obvious hallucinations
+- Review generated responses
+- Validate report structure
 - Approve final response
 
 ---
-### Conversation Memory
 
-* Session Memory
-* Conversation History
-* Recent Interaction Retrieval
+## Memory Service
 
-### Memory Service
+Responsibilities
 
-* Memory Management
-* Save Conversations
-* Retrieve Conversations
-* Clear Memory
+- Save conversations
+- Retrieve conversations
+- Clear conversations
 
-# Data Layer
+Current implementation
 
+- In-memory storage
+
+Future implementations
+
+- SQLite
+- Redis
 - ChromaDB
-- Persistent Storage
 
 ---
 
-# Embedding Layer
+# Data Layer
+
+Vector Database
+
+- ChromaDB
+
+Embedding Model
 
 - BAAI/bge-small-en-v1.5
 
 ---
 
-# Future AI-KOS Roadmap
-## Multi-Agent Orchestration Flow
+# Current System Features
 
-User Query
-↓
-Planner Agent
-↓
-Memory Service
-↓
-Conversation Memory
-↓
-Workflow Routing
-↓
-Retriever Agent / LLM
-↓
-Report Generator
-↓
-Critic Agent
-↓
-Memory Update
-↓
-Final Response
+✅ Document Ingestion
 
-### Orchestrator Responsibilities
+✅ Semantic Search
 
-- Receive user queries
-- Create an execution plan using the Planner Agent
-- Retrieve recent conversation history
-- Route knowledge queries through the RAG pipeline
-- Route general queries directly to the configured LLM
-- Generate a structured report
-- Review the report using the Critic Agent
-- Save the approved interaction into conversation memory
-- Return the final reviewed response
+✅ Retrieval-Augmented Generation
+
+✅ Planner-based Routing
+
+✅ Conversation Memory
+
+✅ History-aware Prompt Generation
+
+✅ Structured Report Generation
+
+✅ Critic Review
+
+✅ Modular Architecture
+
+✅ Provider Abstraction
+
+---
+
+# Current AI Agents
+
+- Planner Agent
+- Retriever Agent
+- Validator Agent
+- Report Generator Agent
+- Critic Agent
+
+---
+
+# Current Services
+
+- Embedding Service
+- Context Builder
+- Prompt Builder
+- RAG Service
+- Memory Service
+- Orchestrator Service
+
+---
+
+# Testing
+
+The project includes
+
+- Unit Tests
+- Integration Tests
+- End-to-End Tests
+
+Current Status
+
+57 / 57 Tests Passing
