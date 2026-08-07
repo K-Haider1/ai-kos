@@ -8,24 +8,58 @@ from agents.validator.validator_agent import ValidatorAgent
 from services.context_builder import ContextBuilder
 from prompts.prompt_builder import PromptBuilder
 from llm.factory import LLMProviderFactory
-
+from memory.history_formatter import HistoryFormatter
+from services.memory_service import MemoryService
 
 class RAGService:
     """
     Orchestrates the complete Retrieval-Augmented Generation (RAG) pipeline.
     """
 
-    def __init__(self):
-        self.retriever = RetrieverAgent()
-        self.validator = ValidatorAgent()
-        self.context_builder = ContextBuilder()
-        self.prompt_builder = PromptBuilder()
-        self.llm_provider = LLMProviderFactory.create()
+    def __init__(
+        self,
+        retriever=None,
+        validator=None,
+        context_builder=None,
+        prompt_builder=None,
+        llm_provider=None,
+        memory_service=None,
+        history_formatter=None,
+    ):
+        self.retriever = retriever or RetrieverAgent()
 
+        self.validator = validator or ValidatorAgent()
+
+        self.context_builder = (
+            context_builder
+            or ContextBuilder()
+        )
+
+        self.prompt_builder = (
+            prompt_builder
+            or PromptBuilder()
+        )
+
+        self.llm_provider = (
+            llm_provider
+            or LLMProviderFactory.create()
+        )
+
+        self.memory_service = (
+            memory_service
+            or MemoryService()
+        )
+
+        self.history_formatter = (
+            history_formatter
+            or HistoryFormatter()
+        )
+    
     def generate_answer(
         self,
         query: str,
         top_k: int = 3,
+        conversation_history=None,
     ) -> str:
 
         if not query or not query.strip():
@@ -56,11 +90,25 @@ class RAGService:
         )
 
         if not context.strip():
-            return "I could not find relevant information in the knowledge base."
+            return (
+                "I could not find relevant information "
+                "in the knowledge base."
+            )
+
+        conversation_history = (
+            conversation_history or []
+        )
+
+        formatted_history = (
+            self.history_formatter.format(
+                conversation_history
+            )
+        )
 
         prompt = self.prompt_builder.build_prompt(
-            question=query.strip(),
+            query=query.strip(),
             context=context,
+            history=formatted_history,
         )
 
         return self.llm_provider.generate(prompt)

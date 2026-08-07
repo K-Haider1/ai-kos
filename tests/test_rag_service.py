@@ -11,6 +11,16 @@ def test_generate_answer():
 
     rag_service = RAGService()
 
+    # Mock conversation history
+    rag_service.memory_service.recent = MagicMock(
+        return_value=[]
+    )
+
+    # Mock formatted history
+    rag_service.history_formatter.format = MagicMock(
+        return_value=""
+    )
+
     # Mock retrieval result
     rag_service.retriever.retrieve = MagicMock(
         return_value={
@@ -57,6 +67,14 @@ def test_empty_retrieval_returns_fallback_message():
 
     rag_service = RAGService()
 
+    rag_service.memory_service.recent = MagicMock(
+        return_value=[]
+    )
+
+    rag_service.history_formatter.format = MagicMock(
+        return_value=""
+    )
+
     rag_service.retriever.retrieve = MagicMock(
         return_value={
             "documents": [[]]
@@ -80,6 +98,14 @@ def test_empty_retrieval_returns_fallback_message():
 def test_blank_documents_return_fallback_message():
 
     rag_service = RAGService()
+
+    rag_service.memory_service.recent = MagicMock(
+        return_value=[]
+    )
+
+    rag_service.history_formatter.format = MagicMock(
+        return_value=""
+    )
 
     rag_service.retriever.retrieve = MagicMock(
         return_value={
