@@ -20,7 +20,12 @@ class FakePlanner:
 
 class FakeRAGService:
 
-    def generate_answer(self, query):
+    def generate_answer(
+        self,
+        query,
+        top_k=3,
+        conversation_history=None,
+    ):
         return f"RAG answer: {query}"
 
 

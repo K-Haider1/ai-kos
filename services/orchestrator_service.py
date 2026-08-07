@@ -76,9 +76,9 @@ class OrchestratorService:
         )
 
         if query_type == "knowledge_query":
-
             answer = self.rag_service.generate_answer(
-                cleaned_query
+                query=cleaned_query,
+                conversation_history=conversation_history,
             )
 
         elif query_type == "general_query":
