@@ -1,34 +1,43 @@
 # AI-KOS Project Journal
 
+This document records the chronological development of AI-KOS.
+
 ---
 
 # Phase 1 – Repository Setup
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
 - Git Repository
-- GitHub Workflow
+- GitHub Repository
 - Virtual Environment
 
 ---
 
 # Phase 2 – Project Foundation
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
 - Dependency Management
-- Documentation
 - Project Structure
+- Documentation
+- Configuration Files
 
 ---
 
 # Phase 3 – Document Processing
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
@@ -40,7 +49,9 @@ Implemented
 
 # Phase 4 – Embedding Layer
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
@@ -52,7 +63,9 @@ Implemented
 
 # Phase 5 – Vector Database
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
@@ -64,32 +77,38 @@ Implemented
 
 # Phase 6 – Ingestion Pipeline
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
-- End-to-End Document Ingestion
-- Embedding Pipeline
-- Chroma Storage
+- End-to-End Document Pipeline
+- Embedding Generation
+- Vector Storage
 
 ---
 
 # Phase 7 – Semantic Retrieval
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
 - Retriever Agent
 - Similarity Search
 - Query Embeddings
-- Context Retrieval
+- Top-K Retrieval
 
 ---
 
 # Phase 8 – Context Generation
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
@@ -101,65 +120,69 @@ Implemented
 
 # Phase 9 – LLM Integration
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
-- Base LLM Provider
+- Base Provider
 - Gemini Provider
 - Factory Pattern
 - Environment Configuration
-- Secure API Key Loading
-- Provider Tests
 
 ---
 
 # Phase 10 – End-to-End RAG
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
 - RAG Service
-- Retrieval
-- Context Generation
+- Retrieval Pipeline
 - Prompt Generation
-- Gemini Integration
+- LLM Integration
 - Edge Case Handling
-- Full Pipeline Tests
 
 ---
 
 # Phase 11 – Planner Agent
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
 - Query Classification
-- Knowledge Query Detection
-- General Query Detection
 - Workflow Planning
+- Routing Strategy
 
 ---
 
-# Phase 12 – Orchestrator Service
+# Phase 12 – Orchestrator
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
-- Dynamic Routing
 - Planner Integration
-- RAG Integration
+- Dynamic Routing
+- RAG Routing
 - Direct LLM Routing
-- Orchestrator Demo
 
 ---
 
 # Phase 13 – Validator Agent
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
@@ -171,150 +194,182 @@ Implemented
 
 # Phase 14 – Report Generator
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
-- Structured Answer Formatting
-- Standardized Response Object
-
-Response Format
-
-```python
-{
-    "query": "...",
-    "answer": "...",
-    "status": "approved"
-}
-```
+- Structured Response Generation
+- Standardized Output Format
 
 ---
 
 # Phase 15 – Critic Agent
 
-Completed
+Status
+
+✅ Completed
 
 Implemented
 
-- Report Review
+- Response Review
 - Response Validation
 - Final Approval
 
 ---
 
-# Current Project Statistics
+# Phase 15.3 – Memory-Aware Orchestrator
+
+Status
+
+✅ Completed
+
+Objective
+
+Introduce conversation memory into the orchestration pipeline.
+
+Implemented
+
+- ConversationMemory
+- MemoryService
+- Conversation Persistence
+- Automatic History Retrieval
+- Memory-aware Orchestrator
+
+Testing
+
+Added
+
+- ConversationMemory Tests
+- MemoryService Tests
+- Updated Orchestrator Tests
+
+Result
+
+46 / 46 Tests Passed
+
+Outcome
+
+AI-KOS can now remember previous conversations during a session.
+
+---
+
+# Phase 15.4 – History-Aware Prompt Generation
+
+Status
+
+✅ Completed
+
+Date
+
+07-Aug-2026
+
+Objective
+
+Enable AI-KOS to generate prompts using both conversation history and retrieved knowledge.
+
+Implemented
+
+### History Formatter
+
+Created
+
+memory/history_formatter.py
+
+Features
+
+- Formats conversation history
+- Ignores invalid interactions
+- Produces prompt-ready history
+
+---
+
+### Prompt Builder Enhancement
+
+Updated
+
+prompts/prompt_builder.py
+
+Features
+
+- Supports history
+- Supports retrieved context
+- Supports current user query
+- Produces standardized prompts
+
+---
+
+### RAG Service Enhancement
+
+Updated
+
+services/rag_service.py
+
+Features
+
+- Accepts conversation history
+- Formats conversation history
+- Builds history-aware prompts
+
+---
+
+### Demo
+
+Added
+
+scripts/run_memory_demo.py
+
+Purpose
+
+Demonstrates multi-turn prompt generation.
+
+---
+
+### Testing
+
+Added
+
+- test_history_formatter.py
+
+Updated
+
+- test_prompt_builder.py
+- test_rag_service.py
+- test_orchestrator_service.py
+
+Result
+
+57 / 57 Tests Passed
+
+---
+
+Outcome
+
+AI-KOS can now generate prompts containing
+
+- Previous conversation
+- Retrieved context
+- Current question
+
+This provides the foundation for follow-up question resolution.
+
+---
+
+# Current Project Status
+
+Completed Phases
+
+15.4
 
 Architecture
 
 - Modular
 - Service-Oriented
-- Multi-Agent Ready
+- Multi-Agent
+- Memory-Aware
+- RAG-Based
 
-Current AI Agents
+Current Test Status
 
-- Planner Agent
-- Retriever Agent
-- Validator Agent
-- Report Generator Agent
-- Critic Agent
-
-Core Services
-
-- Embedding Service
-- Context Builder
-- Prompt Builder
-- RAG Service
-- Orchestrator Service
-
-LLM Providers
-
-- Gemini
-
-Vector Database
-
-- ChromaDB
-
-Embedding Model
-
-- BAAI/bge-small-en-v1.5
-
-Testing
-
-- Unit Tests
-- Integration Tests
-- End-to-End Tests
-
----
-
-# Phase 15.3 - Memory-Aware Orchestrator
-
-Implemented:
-
-- ConversationMemory component
-- MemoryService abstraction layer
-- Memory-aware Orchestrator
-- Conversation history retrieval
-- Automatic conversation persistence
-- Integration of memory with the orchestration pipeline
-
-Architecture Improvements:
-
-- Introduced a dedicated memory layer
-- Decoupled memory management from orchestration
-- Enabled future conversational context support
-
-Pipeline:
-
-User
-↓
-Planner
-↓
-Memory Service
-↓
-Conversation Memory
-↓
-RAG / LLM
-↓
-Report Generator
-↓
-Critic
-↓
-Memory Save
-↓
-Final Response
-
-Testing:
-
-Added:
-
-- ConversationMemory tests
-- MemoryService tests
-- Updated Orchestrator tests
-
-Verification:
-
-- 46/46 tests passing
-- Memory save verified
-- Memory retrieval verified
-- Orchestrator integration verified
-
-Status:
-
-Completed
-
-# Next Phase
-
-Phase 16
-
-LangGraph Integration
-
-Planned Features
-
-- StateGraph
-- Graph Nodes
-- Conditional Routing
-- Shared State
-- Checkpointing
-- Memory
-- Human-in-the-loop
-- Production Agent Workflow
+57 / 57 Tests Passing
